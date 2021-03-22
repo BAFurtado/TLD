@@ -5,7 +5,7 @@
 
 # Simply adapted to LINUX by Bernardo Alves Furtado
 
-
+import os
 import time
 
 import psutil
@@ -42,13 +42,14 @@ class Interaction:
         pass
 
     def was_pressed(self):
-        if self.keyboard.Key.esc:
+        if self.keyboard.press(Key.esc):
             # Stop listener
             return False
+        return True
 
-    def startInteractiveMapping(self, sPath, fPath, time_step=2.5):
+    def start_interactive_mapping(self, s_path, f_path, time_step=2.5):
         t = time.time()
-        recording = False
+        print(f'STARTED!')
         while is_tld_running():
             if self.was_pressed():
                 if not self.recording:
@@ -56,12 +57,13 @@ class Interaction:
                 else:
                     self.recording = False
 
-            if recording:
+            if self.recording:
                 if time.time() - t > time_step:
                     self.press()
+                    print(f'TRIED TO PRESS BUTTON')
                     t = time.time()
-                    coord = mapping.read_coords_from_file(sPath)
-                    mapping.writeCoordsToFile(coord, fPath + "coords.txt", "a")
-                    mapping.deleteScreenshots(sPath)
+                    coord = mapping.read_coords_from_screenshots(s_path)
+                    mapping.write_coords_to_file(coord, f_path + "coords.txt", "a")
+                    mapping.delete_screenshots(s_path)
             time.sleep(30)
-        mapping.deleteScreenshots(sPath)
+        mapping.delete_screenshots(s_path)

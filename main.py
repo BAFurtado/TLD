@@ -12,6 +12,14 @@ class TLDMappingToolTK(tkinter.Tk):
 
     def __init__(self):
         super().__init__()
+        self.createmap_bt = tkinter.Button(self,
+                                           text=u"Create maps",
+                                           state='disabled',
+                                           command=lambda: mapping.create_maps(self.sPath, self.mPath))
+        self.run_bt = tkinter.Button(self,
+                                     text=u"Start mapping",
+                                     state='disabled',
+                                     command=lambda: self.interaction.start_interactive_mapping(self.sPath, self.mPath))
         self.mPath = ""
         self.sPath = ""
 
@@ -21,39 +29,31 @@ class TLDMappingToolTK(tkinter.Tk):
 
     def initialize(self):
         tkinter.Tk.grid(self)
-        maps_bt = tkinter.Button(self, text='Choose maps directory', command=self.chooseMapsDir)
+        maps_bt = tkinter.Button(self, text='Choose maps directory', command=self.choose_maps_dir)
         maps_bt.grid(column=0, row=0, columnspan=2, sticky='EW')
 
-        screenshots_bt = tkinter.Button(self, text='Choose screenshots directory', command=self.chooseScreenDir)
+        screenshots_bt = tkinter.Button(self, text='Choose screenshots directory', command=self.choose_screen_dir)
         screenshots_bt.grid(column=0, row=1, columnspan=2, sticky='EW')
 
-        self.run_bt = tkinter.Button(self,
-                                     text=u"Start mapping",
-                                     state='disabled',
-                                     command=lambda: self.interaction.startInteractiveMapping(self.sPath, self.mPath))
         self.run_bt.grid(column=0, row=2)
 
-        self.createmap_bt = tkinter.Button(self,
-                                           text=u"Create maps",
-                                           state='disabled',
-                                           command=lambda: mapping.createMaps(self.sPath, self.mPath))
         self.createmap_bt.grid(column=1, row=2)
 
         tkinter.Tk.grid_columnconfigure(self, index=0, weight=1)
         tkinter.Tk.resizable(self, False, False)
 
-    def enableButtons(self):
+    def enable_buttons(self):
         if self.sPath != "" and self.mPath != "":
             self.run_bt['state'] = 'normal'
             self.createmap_bt['state'] = 'normal'
 
-    def chooseScreenDir(self):
+    def choose_screen_dir(self):
         self.sPath = askdirectory() + "/"
-        self.enableButtons()
+        self.enable_buttons()
 
-    def chooseMapsDir(self):
+    def choose_maps_dir(self):
         self.mPath = askdirectory() + "/"
-        self.enableButtons()
+        self.enable_buttons()
 
 
 # 4 - Execution

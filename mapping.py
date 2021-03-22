@@ -14,6 +14,7 @@ def read_coords_from_screenshots(path):
     screenshots = os.listdir(path)
     screenshots = [S for S in screenshots if "screen" in S]
     coords = np.array([[int(x) for x in s[s.find("(") + 1:s.find(")")].split(",")] for s in screenshots])
+    print(f'GOT COORDINATES {coords}')
     return coords
 
 
@@ -21,29 +22,30 @@ def read_coords_from_file(file_name):
     c = list()
     with open(file_name) as f:
         content = f.readlines()
-        for c in content:
-            s = c.split(" ")
+        for l in content:
+            s = l.split(" ")
             c.append([int(s[0]), int(s[2]), int(s[1])])
     return np.array(c)
 
 
-def writeCoordsToFile(data, fileName, mode="w"):
-    with open(fileName, mode) as f:
+def write_coords_to_file(data, file_name, mode="w"):
+    with open(file_name, mode) as f:
         for c in data:
             f.write(str(c[0]) + " " + str(c[2]) + " " + str(c[1]) + "\n")
 
 
-def deleteScreenshots(path):
+def delete_screenshots(path):
     for fileName in os.listdir(path):
-        if ((".png" in fileName) and ("screen" in fileName)):
+        if (".png" in fileName) and ("screen" in fileName):
             os.remove(path + fileName)
+            print(f'DELETED FILE {fileName}')
 
 
 # 1.2 - Plotting
 # In[3]:
 
 
-def contourPlot(data, path, save=True):
+def contour_plot(data, path, save=True):
     fig = plt.figure()
     xi = linspace(min(data[:, 0]), max(data[:, 0]), 111)
     yi = linspace(min(data[:, 2]), max(data[:, 2]), 111)
@@ -57,7 +59,7 @@ def contourPlot(data, path, save=True):
         plt.savefig(path + "TM_map_contour.png", dpi=150)
 
 
-def scatterPlot(data, path, save=True):
+def scatter_plot(data, path, save=True):
     fig = plt.figure()
     plt.scatter(data[:, 0], data[:, 2], c=data[:, 1], linewidth=0, s=40)
     plt.xlim(min(data[:, 0]), max(data[:, 0]))
@@ -73,7 +75,7 @@ def scatterPlot(data, path, save=True):
 # In[4]:
 
 
-def createMaps(sPath, fPath):
+def create_maps(sPath, fPath):
     fC = read_coords_from_file(fPath + "coords.txt")
     sC = read_coords_from_screenshots(sPath)
     coordinates = np.array([])
@@ -83,23 +85,23 @@ def createMaps(sPath, fPath):
     elif len(fC) == 0:
         print("No files, but screenshots, going on...")
         coordinates = sC
-        writeCoordsToFile(coordinates, fpath + "coords.txt")
-        deleteScreenshots(sPath)
+        write_coords_to_file(coordinates, fpath + "coords.txt")
+        delete_screenshots(sPath)
     elif len(sC) == 0:
         print("No screenshots, but files, going on...")
         coordinates = fC
     else:
         print("Screenshots and files! Going on...")
         coordinates = np.concatenate((fC, sC))
-        writeCoordsToFile(coordinates, fPath + "coords.txt")
-        deleteScreenshots(sPath)
+        write_coords_to_file(coordinates, fPath + "coords.txt")
+        delete_screenshots(sPath)
 
-    contourPlot(coordinates, fPath)
-    scatterPlot(coordinates, fPath)
+    contour_plot(coordinates, fPath)
+    scatter_plot(coordinates, fPath)
 
 
-def checkFile(fileName):
-    fC = read_coords_from_file(fileName)
+def check_file(file_name):
+    fC = read_coords_from_file(file_name)
     coordinates = np.array([])
     if len(fC) == 0:
         print("No data to work on! Doing nothing...")
@@ -107,5 +109,5 @@ def checkFile(fileName):
         print("No screenshots, but a file, going on...")
         print("Number of points in the file = ", len(coordinates))
         coordinates = fC
-    contourPlot(coordinates, " ", save=False)
-    scatterPlot(coordinates, " ", save=False)
+    contour_plot(coordinates, " ", save=False)
+    scatter_plot(coordinates, " ", save=False)

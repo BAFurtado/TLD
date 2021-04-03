@@ -18,10 +18,16 @@ rcParams['figure.figsize'] = 12, 9.5
 
 
 def is_tld_running():
+    return True
     processes_numbers = psutil.pids()
     for n in processes_numbers:
         if 'tld.x86_64' == psutil.Process(n).name():
             return True
+
+
+def background(func, args):
+    th = threading.Thread(target=func, args=args)
+    th.start()
 
 
 class Interaction:
@@ -30,30 +36,24 @@ class Interaction:
         self.keyboard = Controller()
 
     def start_recording(self):
+        print('Started recording')
         self.recording = True
 
     def stop_recording(self):
+        print('Stopped recording')
         self.recording = False
 
     def press(self):
+        print(f'Pressed the button')
         self.keyboard.press(Key.f8)
         self.keyboard.release(Key.f8)
 
-    def background(self, func, args):
-        th = threading.Thread(target=func, args=args)
-        th.start()
-
-    def start_interactive_mapping(self, s_path, f_path, time_step=2.5):
-        t = time.time()
-        print(f'STARTED!')
+    def start_interactive_mapping(self, s_path, f_path):
+        print(f'Started!')
         if self.recording:
             while is_tld_running():
-                if time.time() - t > time_step:
-                    self.press()
-                    print(f'TRIED TO PRESS BUTTON')
-                    t = time.time()
-                    coord = mapping.read_coords_from_screenshots(s_path)
-                    mapping.write_coords_to_file(coord, f_path + "coords.txt", "a")
-                    mapping.delete_screenshots(s_path)
+                self.press()
+                coord = mapping.read_coords_from_screenshots(s_path)
+                mapping.write_coords_to_file(coord, f_path + "coords.txt", "a")
+                mapping.delete_screenshots(s_path)
                 time.sleep(30)
-

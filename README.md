@@ -4,6 +4,8 @@
 
 ### Still a bit on the cumbersome side, but it does the job.
 
+## N O T E . 
+You have to set your DESKTOP folder as the screenshot folder, because that is the default to where the screenshoots go when pressing F8
 
 # THE LONG DARK mapping tool
 A mapping tool for the game The Long Dark developed by [Hinterland Studio](http://hinterlandgames.com/)

@@ -14,7 +14,7 @@ def read_coords_from_screenshots(path):
     screenshots = os.listdir(path)
     screenshots = [S for S in screenshots if "screen" in S]
     coords = np.array([[int(x) for x in s[s.find("(") + 1:s.find(")")].split(",")] for s in screenshots])
-    print(f'GOT COORDINATES {coords}')
+    print(f'Got coordinates {coords}')
     return coords
 
 
@@ -29,6 +29,7 @@ def read_coords_from_file(file_name):
 
 
 def write_coords_to_file(data, file_name, mode="w"):
+    print('Registered coords.')
     with open(file_name, mode) as f:
         for c in data:
             f.write(str(c[0]) + " " + str(c[2]) + " " + str(c[1]) + "\n")

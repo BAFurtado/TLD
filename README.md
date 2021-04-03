@@ -1,4 +1,9 @@
-via https://github.com/PPartisan/THE_LONG_DARK
+## Originally from https://github.com/PPartisan/THE_LONG_DARK
+
+##  Simply adapted to LINUX by Bernardo Alves Furtado
+
+### Still a bit on the cumbersome side, but it does the job.
+
 
 # THE LONG DARK mapping tool
 A mapping tool for the game The Long Dark developed by [Hinterland Studio](http://hinterlandgames.com/)

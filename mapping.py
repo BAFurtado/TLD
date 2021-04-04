@@ -2,6 +2,9 @@
 
 # In[2]:
 
+# Test next
+# # https://stackoverflow.com/questions/59124487/how-to-extract-text-or-numbers-from-images-using-python
+
 import os
 
 import matplotlib.pyplot as plt
@@ -11,6 +14,7 @@ from scipy.interpolate import griddata
 
 
 def read_coords_from_screenshots(path):
+    print(path)
     screenshots = os.listdir(path)
     screenshots = [S for S in screenshots if "screen" in S]
     coords = np.array([[int(x) for x in s[s.find("(") + 1:s.find(")")].split(",")] for s in screenshots])
@@ -48,11 +52,13 @@ def delete_screenshots(path):
 
 def contour_plot(data, path, save=True):
     fig = plt.figure()
-    xi = linspace(min(data[:, 0]), max(data[:, 0]), 111)
-    yi = linspace(min(data[:, 2]), max(data[:, 2]), 111)
-    zi = griddata(data[:, 0], data[:, 2], data[:, 1], xi, yi)
-    plt.contour(xi, yi, zi, 41, linewidths=0.5, colors='black')
-    plt.contourf(xi, yi, zi, 82, )
+    grid_x = linspace(min(data[:, 0]), max(data[:, 0]), 111)
+    grid_y = linspace(min(data[:, 2]), max(data[:, 2]), 111)
+    points = data[:, 0], data[:, 2]
+    values = data[:, 1]
+    zi = griddata(points, values, (grid_x, grid_y))
+    plt.contour(grid_x, grid_y, zi, 41, linewidths=0.5, colors='black')
+    plt.contourf(grid_x, grid_y, zi, 82,)
     plt.colorbar()
     plt.grid(True)
     plt.set_cmap('terrain')
@@ -112,3 +118,9 @@ def check_file(file_name):
         coordinates = fC
     contour_plot(coordinates, " ", save=False)
     scatter_plot(coordinates, " ", save=False)
+
+
+if __name__ == '__main__':
+    sp = '/home/furtadobb/Desktop/'
+    fp = '/home/furtadobb/MyModels/TLD/'
+    create_maps(sp, fp)

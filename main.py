@@ -52,10 +52,12 @@ class TLDMappingToolTK(tkinter.Tk):
 
     def choose_screen_dir(self):
         self.sPath = askdirectory() + "/"
+        print(f'Directory set at {self.sPath}')
         self.enable_buttons()
 
     def choose_maps_dir(self):
         self.mPath = askdirectory() + "/"
+        print(f'Directory set at {self.mPath}')
         self.enable_buttons()
 
 

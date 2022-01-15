@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numpy import linspace
 from scipy.interpolate import griddata
+import matplotlib.tri as tri
 
 
 def read_coords_from_screenshots(path):
@@ -51,17 +52,20 @@ def delete_screenshots(path):
 
 
 def contour_plot(data, path, save=True):
-    fig = plt.figure()
-    grid_x = linspace(min(data[:, 0]), max(data[:, 0]), 111)
-    grid_y = linspace(min(data[:, 2]), max(data[:, 2]), 111)
-    points = data[:, 0], data[:, 2]
-    values = data[:, 1]
-    zi = griddata(data[:, 0], data[:, 2], data[:, 1], grid_x, grid_y)
-    plt.contour(grid_x, grid_y, zi, 41, linewidths=0.5, colors='black')
-    plt.contourf(grid_x, grid_y, zi, 82,)
-    plt.colorbar()
-    plt.grid(True)
-    plt.set_cmap('terrain')
+    fig, ax = plt.subplots()
+    xi = linspace(min(data[:, 0]), max(data[:, 0]), 111)
+    yi = linspace(min(data[:, 2]), max(data[:, 2]), 111)
+    x, y, z = data[:, 0], data[:, 2], data[:, 1]
+    triang = tri.Triangulation(x, y)
+    interpolator = tri.LinearTriInterpolator(triang, z)
+    Xi, Yi = np.meshgrid(xi, yi)
+    zi = interpolator(Xi, Yi)
+
+    ax.contour(xi, yi, zi, levels=14, linewidths=0.5, colors='k')
+    cntr1 = ax.contourf(xi, yi, zi, levels=14, cmap="RdBu_r")
+    fig.colorbar(cntr1, ax=ax)
+    ax.plot(x, y, 'ko', ms=3)
+
     if save:
         plt.savefig(path + "TM_map_contour.png", dpi=150)
 
@@ -104,9 +108,9 @@ def create_maps(sPath, fPath):
         delete_screenshots(sPath)
 
     coordinates = treat_coords(coordinates)
+    contour_plot(coordinates, fPath)
+    scatter_plot(coordinates, fPath)
     return coordinates
-    # contour_plot(coordinates, fPath)
-    # scatter_plot(coordinates, fPath)
 
 
 def treat_coords(coordinates):

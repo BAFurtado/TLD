@@ -51,8 +51,9 @@ class TLDMappingToolTK(tkinter.Tk):
             self.createmap_bt['state'] = 'normal'
 
     def choose_screen_dir(self):
-        self.sPath = askdirectory() + "/"
-        print(f'Directory set at {self.sPath}')
+        # self.sPath = askdirectory() + "/"
+        self.sPath = '/home/furtado/Desktop/'
+        print(f'Directory set at Defautl {self.sPath}')
         self.enable_buttons()
 
     def choose_maps_dir(self):

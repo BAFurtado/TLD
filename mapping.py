@@ -56,7 +56,7 @@ def contour_plot(data, path, save=True):
     grid_y = linspace(min(data[:, 2]), max(data[:, 2]), 111)
     points = data[:, 0], data[:, 2]
     values = data[:, 1]
-    zi = griddata(points, values, (grid_x, grid_y))
+    zi = griddata(data[:, 0], data[:, 2], data[:, 1], grid_x, grid_y)
     plt.contour(grid_x, grid_y, zi, 41, linewidths=0.5, colors='black')
     plt.contourf(grid_x, grid_y, zi, 82,)
     plt.colorbar()
@@ -92,7 +92,7 @@ def create_maps(sPath, fPath):
     elif len(fC) == 0:
         print("No files, but screenshots, going on...")
         coordinates = sC
-        write_coords_to_file(coordinates, fpath + "coords.txt")
+        write_coords_to_file(coordinates, fPath + "coords.txt")
         delete_screenshots(sPath)
     elif len(sC) == 0:
         print("No screenshots, but files, going on...")
@@ -103,8 +103,14 @@ def create_maps(sPath, fPath):
         write_coords_to_file(coordinates, fPath + "coords.txt")
         delete_screenshots(sPath)
 
-    contour_plot(coordinates, fPath)
-    scatter_plot(coordinates, fPath)
+    coordinates = treat_coords(coordinates)
+    return coordinates
+    # contour_plot(coordinates, fPath)
+    # scatter_plot(coordinates, fPath)
+
+
+def treat_coords(coordinates):
+    return coordinates
 
 
 def check_file(file_name):
@@ -121,6 +127,6 @@ def check_file(file_name):
 
 
 if __name__ == '__main__':
-    sp = '/home/furtadobb/Desktop/'
-    fp = '/home/furtadobb/MyModels/TLD/'
-    create_maps(sp, fp)
+    sp = '/home/furtado/Desktop/'
+    fp = '/home/furtado/MyModels/TLD/'
+    d = create_maps(sp, fp)
